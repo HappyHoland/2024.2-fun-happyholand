@@ -35,8 +35,6 @@ fib (S (S n)) = fib (S n) + fib n
 fib n = n
 
 
-leq (S n) O = False
-leq (S n) (S m) = leq n m
 
 
 -- abbrevs (syntactic sugar)
