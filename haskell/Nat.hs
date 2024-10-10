@@ -16,7 +16,7 @@ n * O = O
 n * S m = n + (n * m)
 
 (°) :: Nat -> Nat -> Nat
-n ° O = so
+n ° O = S O
 n ° (S m) = n * (n ° m)
 
 double :: Nat -> Nat
@@ -27,17 +27,17 @@ pred O = O
 pred (S n) = n
 
 fact :: Nat -> Nat
-fact O = so
+fact O = S O
 fact (S n) = S n * fact n 
 
 fib :: Nat -> Nat
 fib (S (S n)) = fib (S n) + fib n
 fib n = n
 
-(<=) :: Nat -> Nat -> Bool
-O <= n = True
-S n <= O = False
-S n <= S m = n <= m
+leq :: Nat -> Nat -> Bool
+leq O n = True
+leq (S n) O = False
+leq (S n) (S m) = leq n m
 
 
 -- abbrevs (syntactic sugar)
