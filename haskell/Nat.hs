@@ -34,8 +34,7 @@ fib :: Nat -> Nat
 fib (S (S n)) = fib (S n) + fib n
 fib n = n
 
-leq :: Nat -> Nat -> Bool
-leq O n = True
+
 leq (S n) O = False
 leq (S n) (S m) = leq n m
 
