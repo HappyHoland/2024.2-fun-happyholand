@@ -1,21 +1,32 @@
-{-# LANGUAGE GADTs #-}
-
 module Nat where
 
-import Prelude hiding
-   ( Num(..) )
+import Prelude hiding ( Num(..) )
 
 data Nat where
     O :: Nat
     S :: Nat -> Nat
   deriving (Eq, Show)
 
-plus :: Nat -> Nat -> Nat
-plus n O = n
-plus n (S m) = S (plus n m)
-
 (+) :: Nat -> Nat -> Nat
-(+) = plus
+n + O = n
+n + S m = S (n + m)
+
+(*) :: Nat -> Nat -> Nat
+n * O = O
+n * S m = n + (n * m)
+
+(°) :: Nat -> Nat -> Nat
+n ° O = so
+n ° (S m) = n * (n ° m)
+
+double :: Nat -> Nat
+double = (*) sso
+
+pred :: Nat -> Nat
+pred O = O
+pred (S n) = n
+
+
 
 -- abbrevs (syntactic sugar)
 o, so, sso, ssso :: Nat
