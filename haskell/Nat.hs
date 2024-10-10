@@ -26,6 +26,18 @@ pred :: Nat -> Nat
 pred O = O
 pred (S n) = n
 
+fact :: Nat -> Nat
+fact O = so
+fact (S n) = S n * fact n 
+
+fib :: Nat -> Nat
+fib (S (S n)) = fib (S n) + fib n
+fib n = n
+
+(<=) :: Nat -> Nat -> Bool
+O <= n = True
+S n <= O = False
+S n <= S m = n <= m
 
 
 -- abbrevs (syntactic sugar)
