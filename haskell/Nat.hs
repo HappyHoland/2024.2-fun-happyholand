@@ -1,6 +1,6 @@
 module Nat where
 
-import Prelude hiding ( Num(..), max, min, (^), Bool(..), (==), (<=), quot, rem)
+import Prelude hiding ( Num(..), max, min, (^), Bool(..), (==), (<=), quot, rem, gcd, lcm, div)
 import Bool
 
 data Nat where
@@ -45,37 +45,9 @@ max O n = n
 max n O = n
 max (S n) (S m) = S (max n m)
 
-(==) :: Nat -> Nat -> Bool
-S n == S m = n == m
-O == O = True
-_ == _ = False
-
-(<=) :: Nat -> Nat -> Bool
-O <= n = True
-n <= O = False
-S n <= S m = n <= m
-
 monus :: Nat -> Nat -> Nat
 monus (S n) (S m) = monus n m
 monus n _ = n
-
-quot :: Nat -> Nat -> Nat
-quot _ O = error "dividing by zero"
-quot n m = ifThenElse (m <= n) (S (quot (monus n m) m)) O
-
-rem :: Nat -> Nat -> Nat
-rem _ O = error "dividing by zero"
-rem n m = ifThenElse (m <= n) (rem (monus n m) m) n
-
-div :: (Nat, Nat) -> (Nat, Nat)
-div (n, O) = error "dividing by zero"
-div (n, m) = (quot n m, rem n m)
-
-gcd :: Nat -> Nat -> Nat
-gcd (S n) (S m) = 
-gcd n O = n
-gcd O n = n 
-
 
 -- abbrevs (syntactic sugar)
 o, so, sso, ssso :: Nat
