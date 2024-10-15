@@ -18,8 +18,9 @@ div (n, O) = error "dividing by zero"
 div (n, m) = (quot n m, rem n m)
 
 gcd :: Nat -> Nat -> Nat
-gcd O O = error "undefined"
-gcd (S n) (S m) = gcd (min (S n) (S m)) (rem (max (S n) (S m)) (min (S n) (S m)))
+gcd (S n) (S m) = let x = max (S n) (S m)
+                      y = min (S n) (S m)
+                      in gcd y (rem x y)
 gcd n m = max n m
 
 lcm :: Nat -> Nat -> Nat
