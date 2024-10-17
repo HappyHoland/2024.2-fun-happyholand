@@ -4,14 +4,15 @@ import Prelude hiding ( Num(..), max, min, (^), Bool(..), (==), (<=), quot, rem,
 import Bool
 import Nat
 import NatRel
+import Typeclasses
 
 quot :: Nat -> Nat -> Nat
 quot _ O = error "dividing by zero"
-quot n m = ifThenElse (m <= n) (S (quot (monus n m) m)) O
+quot n m = ifThenElse (m `leq` n) (S (quot (monus n m) m)) O
 
 rem :: Nat -> Nat -> Nat
 rem _ O = error "dividing by zero"
-rem n m = ifThenElse (m <= n) (rem (monus n m) m) n
+rem n m = ifThenElse (m `leq` n) (rem (monus n m) m) n
 
 div :: (Nat, Nat) -> (Nat, Nat)
 div (n, O) = error "dividing by zero"
