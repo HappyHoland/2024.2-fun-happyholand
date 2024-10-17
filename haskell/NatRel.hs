@@ -9,7 +9,7 @@ S n == S m = n == m
 O == O = True
 _ == _ = False
 
-(<=) :: Nat -> Nat -> Bool
-O <= n = True
-n <= O = False
-S n <= S m = n <= m
+leq :: Nat -> Nat -> Bool
+O `leq` n = True
+n `leq` O = False
+S n `leq` S m = n `leq` m
