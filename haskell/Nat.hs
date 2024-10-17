@@ -1,24 +1,39 @@
 module Nat where
 
-import Prelude hiding ( Num(..), max, min, (^), Bool(..), (==), (<=), quot, rem, gcd, lcm, div)
+import Prelude hiding 
+  ( Num(..), max, min, (^), Bool(..),
+   (==), (<=), quot, rem, gcd, lcm, 
+   div, exp)
 import Bool
+import Typeclasses
 
 data Nat where
     O :: Nat
     S :: Nat -> Nat
   deriving (Show)
 
-(+) :: Nat -> Nat -> Nat
-n + O = n
-n + S m = S (n + m)
+instance Add Nat where
+  (+) = plus
+  zero = O
 
-(*) :: Nat -> Nat -> Nat
-n * O = O
-n * S m = n + (n * m)
+plus :: Nat -> Nat -> Nat
+n `plus` O = n
+n `plus` S m = S (n `plus` m)
 
-(^) :: Nat -> Nat -> Nat
-n ^ O = S O
-n ^ (S m) = n * (n ^ m)
+instance Mult Nat where
+  (*) = times
+  one = S O
+
+times :: Nat -> Nat -> Nat
+n `times` O = O
+n `times` S m = n + (n `times` m)
+
+instance Pow Nat where
+  (^) = exp
+
+exp :: Nat -> Nat -> Nat
+n `exp` O = S O
+n `exp` (S m) = n * (n `exp` m)
 
 double :: Nat -> Nat
 double = (*) sso
