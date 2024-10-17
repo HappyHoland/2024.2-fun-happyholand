@@ -12,7 +12,7 @@ data Nat where
     S :: Nat -> Nat
   deriving (Show)
 
-instance Add Nat where
+instance Additive Nat where
   (+) = plus
   zero = O
 
@@ -20,7 +20,7 @@ plus :: Nat -> Nat -> Nat
 n `plus` O = n
 n `plus` S m = S (n `plus` m)
 
-instance Mult Nat where
+instance Multiplicative Nat where
   (*) = times
   one = S O
 
@@ -28,7 +28,7 @@ times :: Nat -> Nat -> Nat
 n `times` O = O
 n `times` S m = n + (n `times` m)
 
-instance Pow Nat where
+instance Exponentiative Nat where
   (^) = exp
 
 exp :: Nat -> Nat -> Nat

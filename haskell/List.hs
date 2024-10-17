@@ -33,11 +33,11 @@ stretch :: Nat -> List a -> List a
 stretch _ Empty = Empty
 stretch n (Cons x xs) = concat (repeat n x) (stretch n xs)
 
-sum :: Add a => List a -> a
+sum :: Additive a => List a -> a
 sum Empty = zero
 sum (Cons x xs) = x + sum xs
 
-product :: Mult a => List a -> a
+product :: Multiplicative a => List a -> a
 product Empty = one
 product (Cons x xs) = x * product xs
 

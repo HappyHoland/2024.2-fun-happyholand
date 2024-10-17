@@ -1,12 +1,12 @@
 module Typeclasses where
 
-class Add a where
+class Additive a where
     (+) :: a -> a -> a
     zero :: a
 
-class Mult a where
+class Multiplicative a where
     (*) :: a -> a -> a
     one :: a
 
-class Mult a => Pow a where
+class Multiplicative a => Exponentiative a where
     (^) :: a -> a -> a
