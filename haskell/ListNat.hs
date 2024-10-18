@@ -1,21 +1,21 @@
 module ListNat where
 
-import Prelude hiding (Num(..), List(..), sum, product, (^), exp)
+import Prelude hiding (Num(..), List(..), sum, product, (^), exp, map)
 import List
 import Nat
 import Typeclasses
 
 addNat :: Nat -> List Nat -> List Nat
-addNat = scalarOpL plus
+addNat n = map (+n)
 
 mulNat :: Nat -> List Nat -> List Nat
-mulNat = scalarOpL times
+mulNat n = map (*n)
 
 expNat :: Nat -> List Nat -> List Nat
-expNat = scalarOpL exp
+expNat n = map (n^) 
 
 powNat :: Nat -> List Nat -> List Nat
-powNat = scalarOpR exp
+powNat n = map (^n)
 
 pwAdd :: List Nat -> List Nat -> List Nat
 pwAdd = pwOp plus
@@ -27,5 +27,5 @@ pwExp :: List Nat -> List Nat -> List Nat
 pwExp = pwOp exp
 
 countdown :: Nat -> List Nat
-countdown O = Cons O Empty
-countdown (S n) = Cons (S n) (countdown n)
+countdown O = O :> Nil
+countdown (S n) = S n :> countdown n
