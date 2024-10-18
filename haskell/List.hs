@@ -3,7 +3,7 @@ module List where
 import Prelude hiding 
     ( Num(..), max, min, (^), Bool(..), (==), (<=),
      quot, rem, gcd, lcm, div, even, List(..),
-      length, sum, product, concat, repeat, map, filter)
+      length, sum, product, concat, repeat, map, filter, reverse)
 import Nat
 import Typeclasses
 import Bool (Bool, ifThenElse)
@@ -56,3 +56,6 @@ filter :: (a -> Bool) -> List a -> List a
 filter p Nil = Nil
 filter p (x :> xs) = ifThenElse (p x) (x :> filter p xs) (filter p xs)
 
+reverse :: List a -> List a
+reverse Nil = Nil
+reverse (x :> xs) = concat (reverse xs) (x :> Nil) 
