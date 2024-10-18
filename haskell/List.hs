@@ -3,9 +3,11 @@ module List where
 import Prelude hiding 
     ( Num(..), max, min, (^), Bool(..), (==), (<=),
      quot, rem, gcd, lcm, div, even, List(..),
-      length, sum, product, concat, repeat, map)
+      length, sum, product, concat, repeat, map, filter)
 import Nat
 import Typeclasses
+import Bool (Bool, ifThenElse)
+import Data.Sequence (Seq(Empty))
 
 data List a where
     Nil :: List a
@@ -50,4 +52,7 @@ pwOp op _ Nil = Nil
 pwOp op Nil _ = Nil
 pwOp op (x :> xs) (y :> ys) = op x y :> pwOp op xs ys
 
+filter :: (a -> Bool) -> List a -> List a
+filter p Nil = Nil
+filter p (x :> xs) = ifThenElse (p x) (x :> filter p xs) (filter p xs)
 
