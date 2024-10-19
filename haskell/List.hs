@@ -3,7 +3,7 @@ module List where
 import Prelude hiding 
     ( Num(..), max, min, (^), Bool(..), (==), (<=),
      quot, rem, gcd, lcm, div, even, List(..),
-      length, sum, product, concat, repeat, map, filter, reverse)
+      length, sum, product, concat, repeat, map, filter, reverse, showList)
 import Nat
 import Typeclasses
 import Bool (Bool, ifThenElse)
@@ -12,7 +12,14 @@ import Data.Sequence (Seq(Empty))
 data List a where
     Nil :: List a
     (:>) :: a -> List a -> List a
-    deriving (Eq, Show)
+    deriving (Eq)
+
+instance Show a => Show (List a) where
+    show xs = "[" ++ showList xs ++ "]"
+
+showList :: Show a => List a -> String
+showList (x :> Nil) = show x
+showList (x :> xs) = show x ++ ", " ++ showList xs
 
 length :: List a -> Nat
 length Nil = O
@@ -59,3 +66,8 @@ filter p (x :> xs) = ifThenElse (p x) (x :> filter p xs) (filter p xs)
 reverse :: List a -> List a
 reverse Nil = Nil
 reverse (x :> xs) = concat (reverse xs) (x :> Nil) 
+
+comb :: List a -> List Nat -> List a
+comb xs = map (index xs)
+
+
