@@ -1,9 +1,13 @@
 module ListNat where
 
-import Prelude hiding (Num(..), List(..), sum, product, (^), exp, map)
+import Prelude hiding (Num(..), List(..), sum, product, (^), exp, map, (==), pred, reverse, filter, even, odd)
 import List
 import Nat
 import Typeclasses
+import Bool (ifThenElse)
+import NatRel
+import EvOd
+
 
 addNat :: Nat -> List Nat -> List Nat
 addNat n = map (+n)
@@ -29,3 +33,16 @@ pwExp = pwOp exp
 countdown :: Nat -> List Nat
 countdown O = O :> Nil
 countdown (S n) = S n :> countdown n
+
+range :: Nat -> Nat -> List Nat
+range n m = ifThenElse (n `leq` m) 
+                (ifThenElse (n == m)
+                    (m :> Nil)
+                    (n :> range (S n) m)) 
+                (n :> range (pred n) m)
+
+evens :: List Nat -> List Nat
+evens = filter even
+
+odds :: List Nat -> List Nat
+odds = filter odd
