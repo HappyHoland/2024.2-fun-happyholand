@@ -10,7 +10,10 @@ import Typeclasses
 data Nat where
     O :: Nat
     S :: Nat -> Nat
-  deriving (Show)
+
+instance Show Nat where
+  show O = "o"
+  show (S n) = "s" ++ show n 
 
 instance Additive Nat where
   (+) = plus
@@ -70,4 +73,5 @@ o    = O
 so   = S o
 sso  = S so
 ssso = S sso
+sssso= S ssso
 
