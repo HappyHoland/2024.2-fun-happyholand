@@ -13,6 +13,7 @@ import Prelude
 import qualified Prelude   as P
 import qualified Data.List as L
 import qualified Data.Char as C
+import Distribution.Simple.Utils (xargs)
 
 {- import qualified ... as ... ?
 
@@ -58,28 +59,36 @@ write [u,v]     for our u `Cons` (v `Cons` Nil)
 -}
 
 head :: [a] -> a
-head = undefined
+head [] = error "no head on empty list"
+head (x : xs) = x
 
 tail :: [a] -> [a]
-tail = undefined
+tail [] = error "no tail on empty list"
+tail (x : xs) = xs
 
 null :: [a] -> Bool
-null = undefined
+null [] = True
+null (x : xs) = True
 
 length :: Integral i => [a] -> i
-length = undefined
+length [] = 0
+length (x : xs) = 1 + length xs
 
 sum :: Num a => [a] -> a
-sum = undefined
+sum [] = 0
+sum (x : xs) = x + sum xs
 
 product :: Num a => [a] -> a
-product = undefined
+product [] = 1
+product (x : xs) = x * product xs
 
 reverse :: [a] -> [a]
-reverse = undefined
+reverse [] = []
+reverse (x : xs) = reverse xs ++ [x]
 
 (++) :: [a] -> [a] -> [a]
-(++) = undefined
+[] ++ xs = xs
+(x : xs) ++ ys = x : (xs ++ ys)  
 
 -- right-associative for performance!
 -- (what?!)
@@ -87,7 +96,7 @@ infixr 5 ++
 
 -- (snoc is cons written backwards)
 snoc :: a -> [a] -> [a]
-snoc = undefined
+snoc x xs = xs ++ [x]
 
 (<:) :: [a] -> a -> [a]
 (<:) = flip snoc
@@ -103,15 +112,52 @@ xs +++ (y:ys) = (xs +++ [y]) +++ ys
 infixl 5 +++
 
 -- minimum :: Ord a => [a] -> a
+minimum :: Ord a => [a] -> a
+minimum [] = error "empty list"
+minimum (x : xs)
+  | x <= min = x
+  | otherwise = min
+  where min = minimum xs
+
 -- maximum :: Ord a => [a] -> a
+maximum :: Ord a => [a] -> a
+maximum [] = error "empty list"
+maximum (x : xs)
+  | x >= max = x
+  | otherwise = max
+  where max = maximum xs
 
 -- take
+take :: Integral i => i -> [a] -> [a]
+take 0 xs = []
+take i [] = []
+take i (x : xs) = x : take (i-1) xs
+
 -- drop
+drop :: Integral i => i -> [a] -> [a]
+drop 0 xs = xs
+drop i [] = []
+drop i (x : xs) = drop (i-1) xs
 
 -- takeWhile
+takeWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile p [] = []
+takeWhile p (x : xs)
+  | p x = x : takeWhile p xs
+  | otherwise = []
+
 -- dropWhile
+dropWhile :: (a -> Bool) -> [a] -> [a]
+dropWhile p [] = []
+dropWhile p (x : xs)
+  | p x = dropWhile p xs
+  | otherwise = x : xs
 
 -- tails
+tails :: [a] -> [[a]]
+tails [] = [[]]
+tails (x : xs) = tail (x : xs) : tails xs
+
 -- init
 -- inits
 
@@ -164,7 +210,9 @@ infixl 5 +++
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
 palindrome :: String -> Bool
-palindrome = undefined
+palindrome xs
+  | xs == reverse xs = True
+  | otherwise = False
 
 {-
 
