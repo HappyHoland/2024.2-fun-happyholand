@@ -193,13 +193,27 @@ or :: [Bool] -> Bool
 or = any (==True)
 
 -- concat
+concat :: [[a]] -> [a]
+concat [] = []
+concat (x : xs) = x ++ concat xs
 
 -- elem using the funciton 'any' above
+elem :: Eq a => a -> [a] -> Bool
+elem x = any (==x)
 
 -- elem': same as elem but elementary definition
 -- (without using other functions except (==))
+elem' :: Eq a => a -> [a] -> Bool
+elem' x [] = False
+elem' x (y : ys)
+  | x == y = True
+  | otherwise = elem' x ys
 
 -- (!!)
+(!!) :: [a] -> Int -> a
+[] !! i = error "out of bounds"
+(x : xs) !! 0 = x
+(x : xs) !! i = xs !! (i-1) 
 
 filter :: (a -> Bool) -> [a] -> [a]
 filter p [] = []
@@ -212,6 +226,9 @@ map f [] = []
 map f (x : xs) = f x : map f xs
 
 -- cycle
+cycle :: [a] -> [a]
+cycle [] = error "empty list"
+cycle xs = xs ++ cycle xs
 -- repeat
 -- replicateake
 
