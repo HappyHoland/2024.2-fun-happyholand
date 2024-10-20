@@ -159,15 +159,38 @@ tails [] = [[]]
 tails (x : xs) = tail (x : xs) : tails xs
 
 -- init
+init :: [a] -> [a]
+init [] = error "empty list"
+init [x] = []
+init (x : xs) = x : init xs
+
 -- inits
+inits :: [a] -> [[a]]
+inits [] = [[]]
+inits (x : xs) = inits xs <: init (x : xs)
 
 -- subsequences
+subsequences :: [a] -> [[a]]
+subsequences [] = [[]]
+subsequences (x : xs) = subsequences xs ++ map (++ [x]) (subsequences xs)
 
 -- any
+any :: (a -> Bool) -> [a] -> Bool
+any p [] = False
+any p (x : xs) = p x || any p xs
+
 -- all
+all :: (a -> Bool) -> [a] -> Bool
+all p [] = True
+all p (x : xs) = p x && all p xs
 
 -- and
+and :: [Bool] -> Bool
+and = all (==True)  
+
 -- or
+or :: [Bool] -> Bool
+or = any (==True)
 
 -- concat
 
@@ -178,12 +201,19 @@ tails (x : xs) = tail (x : xs) : tails xs
 
 -- (!!)
 
--- filter
--- map
+filter :: (a -> Bool) -> [a] -> [a]
+filter p [] = []
+filter p (x : xs)
+  | p x = x : filter p xs
+  | otherwise = filter p xs
+
+map :: (a -> b) -> [a] -> [b]
+map f [] = []
+map f (x : xs) = f x : map f xs
 
 -- cycle
 -- repeat
--- replicate
+-- replicateake
 
 -- isPrefixOf
 -- isInfixOf
