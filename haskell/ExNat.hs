@@ -34,23 +34,31 @@ instance Show Nat where
 
     -- zero  should be shown as O
     -- three should be shown as SSSO
-    show = undefined
+    show O = "O"
+    show (S n) = "S" ++ show n
 
 instance Eq Nat where
 
-    (==) = undefined
+    O == O = True
+    S n == S m = n == m
+    _ == _ = False
 
 instance Ord Nat where
 
-    (<=) = undefined
+    O <= _ = True
+    _ <= O = False
+    S n <= S m = n <= m 
 
     -- Ord does not REQUIRE defining min and max.
     -- Howevener, you should define them WITHOUT using (<=).
     -- Both are binary functions: max m n = ..., etc.
 
-    min = undefined
+    min (S n) (S m) = S (min n m)
+    min _ _ = O
 
-    max = undefined
+    max (S n) (S m) = S (max n m)
+    max n O = n
+    max O n = n
 
 
 ----------------------------------------------------------------
@@ -58,7 +66,8 @@ instance Ord Nat where
 ----------------------------------------------------------------
 
 isZero :: Nat -> Bool
-isZero = undefined
+isZero O = True
+isZero (S n) = False
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
