@@ -3,7 +3,7 @@ module Nat where
 import Prelude hiding 
   ( Num(..), max, min, (^), Bool(..),
    (==), (<=), quot, rem, gcd, lcm, 
-   div, exp)
+   div, exp, succ)
 import Bool
 import Typeclasses
 
@@ -39,7 +39,7 @@ n `exp` O = S O
 n `exp` (S m) = n * (n `exp` m)
 
 double :: Nat -> Nat
-double = (*) sso
+double = uncurry (+) . diag
 
 pred :: Nat -> Nat
 pred O = O
@@ -66,6 +66,16 @@ max (S n) (S m) = S (max n m)
 monus :: Nat -> Nat -> Nat
 monus (S n) (S m) = monus n m
 monus n _ = n
+
+succ :: Nat -> Nat
+succ = S
+
+diag :: Nat -> (Nat, Nat)
+diag n = (n,n)
+
+square :: Nat -> Nat
+square = uncurry (*) . diag
+
 
 -- abbrevs (syntactic sugar)
 o, so, sso, ssso :: Nat
