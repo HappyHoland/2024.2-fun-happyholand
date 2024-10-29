@@ -14,6 +14,7 @@ import qualified Prelude   as P
 import qualified Data.List as L
 import qualified Data.Char as C
 import Distribution.Simple.Utils (xargs)
+import Data.ByteString (isSuffixOf)
 
 {- import qualified ... as ... ?
 
@@ -74,13 +75,15 @@ length :: Integral i => [a] -> i
 length [] = 0
 length (x : xs) = 1 + length xs
 
+foldr :: b -> (a -> b -> b) -> [a] -> b
+foldr i op [] = i
+foldr i op (x : xs) = x `op` foldr i op xs
+
 sum :: Num a => [a] -> a
-sum [] = 0
-sum (x : xs) = x + sum xs
+sum = foldr 0 (+)
 
 product :: Num a => [a] -> a
-product [] = 1
-product (x : xs) = x * product xs
+product = foldr 1 (*)
 
 reverse :: [a] -> [a]
 reverse [] = []
@@ -176,13 +179,10 @@ subsequences (x : xs) = subsequences xs ++ map (++ [x]) (subsequences xs)
 
 -- any
 any :: (a -> Bool) -> [a] -> Bool
-any p [] = False
-any p (x : xs) = p x || any p xs
-
+any p = foldr False ((||) . p)
 -- all
 all :: (a -> Bool) -> [a] -> Bool
-all p [] = True
-all p (x : xs) = p x && all p xs
+all p = foldr True ((&&) . p)
 
 -- and
 and :: [Bool] -> Bool
@@ -194,8 +194,7 @@ or = any (==True)
 
 -- concat
 concat :: [[a]] -> [a]
-concat [] = []
-concat (x : xs) = x ++ concat xs
+concat = foldr [] (++) 
 
 -- elem using the funciton 'any' above
 elem :: Eq a => a -> [a] -> Bool
@@ -229,37 +228,139 @@ map f (x : xs) = f x : map f xs
 cycle :: [a] -> [a]
 cycle [] = error "empty list"
 cycle xs = xs ++ cycle xs
+
 -- repeat
--- replicateake
+repeat :: a -> [a]
+repeat x = x : repeat x
+
+-- replicate
+replicate :: Int -> a -> [a]
+replicate i x 
+  | i <= 0 = []
+  | otherwise = x : replicate (i-1) x
 
 -- isPrefixOf
+isPrefixOf :: Eq a => [a] -> [a] -> Bool
+isPrefixOf [] _ = True
+isPrefixOf _ [] = False
+isPrefixOf (x : xs) (y : ys) = x == y && isPrefixOf xs ys
+
 -- isInfixOf
+isInfixOf :: Eq a => [a] -> [a] -> Bool
+isInfixOf [] _ = True
+isInfixOf _ [] = False
+isInfixOf (x : xs) (y : ys)
+  | (x : xs) `isPrefixOf` (y : ys) = True
+  | otherwise = isInfixOf (x: xs) ys
+
 -- isSuffixOf
+isSuffixOf :: Eq a => [a] -> [a] -> Bool
+isSuffixOf xs ys = reverse xs `isPrefixOf` reverse ys
 
 -- zip
+zip :: [a] -> [b] -> [(a,b)]
+zip _ [] = []
+zip [] _ = []
+zip (x : xs) (y : ys) = (x, y) : zip xs ys
+
 -- zipWith
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith f _ [] = []
+zipWith f [] _ = []
+zipWith f (x : xs) (y : ys) = f x y : zipWith f xs ys
 
 -- intercalate
+intercalate :: [a] -> [[a]] -> [a]
+intercalate _ [] = []
+intercalate xs (y : ys) = y ++ xs ++ intercalate xs ys
+
 -- nub
+nub :: Eq a => [a] -> [a]
+nub [] = []
+nub (x : xs) = x : nub (filter (/= x) xs)
 
 -- splitAt
 -- what is the problem with the following?:
 -- splitAt n xs  =  (take n xs, drop n xs)
+splitAt :: Integral i => i -> [a] -> ([a], [a])
+splitAt n xs = (take n xs, drop n xs)
 
 -- break
+break :: (a -> Bool) -> [a] -> ([a], [a])
+break p xs = (takeWhile (not . p) xs, dropWhile (not . p) xs)
 
 -- lines
+lines :: String -> [String]
+lines "" = []
+lines (c : cs)
+  | c == '\n' = lines cs
+  | otherwise = takeWhile (/='\n') (c : cs) : lines (dropWhile (/='\n') (c : cs))
+
 -- words
+words :: String -> [String]
+words "" = []
+words (c : cs)
+  | c == ' ' = lines cs
+  | otherwise = takeWhile (/=' ') (c : cs) : words (dropWhile (/=' ') (c : cs))
+
 -- unlines
+unlines :: [String] -> String
+unlines = intercalate "\n"
+
 -- unwords
+unwords :: [String] -> String
+unwords = intercalate " "
+
+fst :: (a, a) -> a
+fst (x,y) = x
+
+snd :: (a, a) -> a
+snd (x,y) = y
 
 -- transpose
+transpose :: [[a]] -> [[a]]
+transpose [] = []
+transpose ([] : xs) = transpose xs
+transpose xs = let hds = map (take 1) xs
+                   tls = map (drop 1) xs
+                   in concat hds : transpose tls
+
+toUpper :: Char -> Char
+toUpper char 
+  | char == 'a' || char == 'A' = 'A'
+  | char == 'b' || char == 'B' = 'B'
+  | char == 'c' || char == 'C' = 'C'
+  | char == 'd' || char == 'D' = 'D'
+  | char == 'e' || char == 'E' = 'E'
+  | char == 'f' || char == 'F' = 'F'
+  | char == 'g' || char == 'G' = 'G'
+  | char == 'h' || char == 'H' = 'H'
+  | char == 'i' || char == 'I' = 'I'
+  | char == 'j' || char == 'j' = 'J'
+  | char == 'k' || char == 'K' = 'K'
+  | char == 'l' || char == 'L' = 'L'
+  | char == 'm' || char == 'M' = 'M'
+  | char == 'o' || char == 'O' = 'O'
+  | char == 'p' || char == 'P' = 'P'
+  | char == 'q' || char == 'Q' = 'Q'
+  | char == 'r' || char == 'R' = 'R'
+  | char == 's' || char == 'S' = 'S'
+  | char == 't' || char == 'T' = 'T'
+  | char == 'w' || char == 'W' = 'W'
+  | char == 'x' || char == 'X' = 'X'
+  | char == 'y' || char == 'Y' = 'Y'
+  | char == 'z' || char == 'Z' = 'Z'
+  | otherwise = char
+
+alphabetical :: Char -> Bool
+alphabetical = (`elem` "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
 palindrome :: String -> Bool
-palindrome xs
-  | xs == reverse xs = True
+palindrome xs 
+  | reverse chars == chars = True
   | otherwise = False
+  where chars = (map toUpper . filter alphabetical) xs
 
 {-
 
