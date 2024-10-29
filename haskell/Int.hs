@@ -5,7 +5,6 @@ import Prelude hiding
    div, exp, succ, Int)
 import Typeclasses
 import Nat
-import EvOd
 
 data Int where
     Int :: (Nat, Nat) -> Int
