@@ -188,8 +188,5 @@ instance Num Nat where
     (-) = (<->)
     abs n = n
     signum = sg
-    fromInteger x
-      | x < 0     = undefined
-      | x == 0    = undefined
-      | otherwise = undefined
+    fromInteger = toNat
 
