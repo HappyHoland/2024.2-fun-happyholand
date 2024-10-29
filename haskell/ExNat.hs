@@ -89,34 +89,47 @@ odd (S n) = even n
 
 -- addition
 (<+>) :: Nat -> Nat -> Nat
-(<+>) = undefined
+n <+> O = n
+n <+> S m = S (n <+> m)
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 (<->) :: Nat -> Nat -> Nat
-(<->) = undefined
+n <-> O = n
+O <-> n = O
+S n <-> S m = n <-> m
 
 -- multiplication
 (<*>) :: Nat -> Nat -> Nat
-(<*>) = undefined
+n <*> O = O
+n <*> S m = n + (n <*> m)
 
 -- exponentiation
 (<^>) :: Nat -> Nat -> Nat
-(<^>) = undefined
+n <^> O = S O
+n <^> S m = n * (n <^> m)
 
 -- quotient
 (</>) :: Nat -> Nat -> Nat
-(</>) = undefined
+n </> O = error "dividing by zero"
+n </> m
+    | m <= n = S ((n <-> m) </> m)
+    | otherwise = O
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-(<%>) = undefined
+n <%> O = error "dividing by zero"
+n <%> m
+    | m <= n = (n <-> m) <%> m
+    | otherwise = n
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
-(<|>) = undefined
+n <|> m
+    | m <= n && n <%> m == 0 = True
+    | otherwise = False
 
 divides = (<|>)
 
@@ -124,20 +137,29 @@ divides = (<|>)
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the real minus operator!)
 absDiff :: Nat -> Nat -> Nat
-absDiff = undefined
+absDiff n O = n
+absDiff O n = n
+absDiff (S n) (S m) = absDiff n m
 
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = S O
+factorial (S n) = S n <*> factorial n
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg (S n) = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
+lo O O = S O
+lo _ (S O) = O
+lo n (S m)
+    | n <^> S (lo (S n) m) <= S n <^> lo (S n) m = error "undefined"
+    | n <^> S (lo (S n) m) <= S m  = S (lo (S n) m)
+    | otherwise = lo (S n) m
 
 
 ----------------------------------------------------------------
@@ -148,10 +170,14 @@ lo = undefined
 -- Do NOT use the following functions in the definitions above!
 
 toNat :: Integral a => a -> Nat
-toNat = undefined
+toNat 0 = O
+toNat i 
+    | i > 0 = S (toNat (i-1))
+    | otherwise = S (toNat (i+1))
 
 fromNat :: Integral a => Nat -> a
-fromNat = undefined
+fromNat O = 0
+fromNat (S n) = fromNat n + 1
 
 
 -- Voilá: we can now easily make Nat an instance of Num.
