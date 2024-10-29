@@ -1,19 +1,23 @@
 module Nat where
 
 import Prelude hiding 
-  ( Num(..), max, min, (^), Bool(..),
-   (==), (<=), quot, rem, gcd, lcm, 
+  ( Num(..), max, min, (^), quot, rem, gcd, lcm, 
    div, exp, succ)
-import Bool
 import Typeclasses
 
 data Nat where
     O :: Nat
     S :: Nat -> Nat
+    deriving (Eq)
 
 instance Show Nat where
   show O = "o"
   show (S n) = "s" ++ show n 
+
+instance Ord Nat where
+  O <= _ = True
+  _ <= O = False
+  S n <= S m = n <= m 
 
 instance Additive Nat where
   (+) = plus
@@ -76,6 +80,10 @@ diag n = (n,n)
 square :: Nat -> Nat
 square = uncurry (*) . diag
 
+abs :: Nat -> Nat -> Nat
+O `abs` n = n
+n `abs` O = n
+S n `abs` S m = n `abs` m
 
 -- abbrevs (syntactic sugar)
 o, so, sso, ssso :: Nat
