@@ -8,7 +8,7 @@ data ArEx = Atom Integer
 
 -- pretty printer
 pretty :: ArEx -> String
-pretty (Atom i) = show i
+pretty (Atom x) = show x
 pretty (Plus e e') = "(" ++ pretty e ++ " + " ++ pretty e' ++ ")" 
 pretty (Times e e') = "(" ++ pretty e ++ " * " ++ pretty e' ++ ")" 
 pretty (Neg e) = "-" ++ pretty e
@@ -22,9 +22,22 @@ ex5 = (Neg ex1) `Times` (Neg ex4)
 
 -- eval evaluates an expression and returns its value
 eval :: ArEx -> Integer
-eval = undefined
+eval (Atom x) = x
+eval (Plus e e') = eval e + eval e'
+eval (Times e e') = eval e * eval e'
+eval (Neg e) = - (eval e)
 
 -- step should make only 1 step of calculation on a given ArEx
 step :: ArEx -> ArEx
-step = undefined
+step (Atom x) = Atom x
+step (Plus (Atom x) (Atom y)) = Atom (x + y)
+step (Plus (Atom i) e) = Plus (Atom i) (step e)
+step (Plus e e') = Plus (step e) e'
+step (Times (Atom x) (Atom y)) = Atom (x * y)
+step (Times (Atom i) e) = Times (Atom i) (step e)
+step (Times e e') = Times (step e) e'
+step (Neg (Atom x)) = Atom (-x)
+step (Neg e) = Neg (step e)
+
+
 
