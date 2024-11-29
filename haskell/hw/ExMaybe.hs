@@ -13,19 +13,22 @@ catMaybes (Nothing:cs) = catMaybes cs
 catMaybes (Just a : cs) = a : catMaybes cs
 
 fromJust :: Maybe a -> a
-fromJust = undefined
+fromJust (Just x) = x 
 
 fromMaybe :: a -> Maybe a -> a
-fromMaybe = undefined
+fromMaybe x Nothing = x
+fromMaybe _ (Just x) = x
 
 isJust :: Maybe a -> Bool
-isJust = undefined
+isJust Nothing = False
+isJust _ = True
 
 isNothing :: Maybe a -> Bool
-isNothing = undefined
+isNothing = not . isJust
 
 mapMaybe :: (a -> b) -> (Maybe a -> Maybe b)
-mapMaybe = undefined
+mapMaybe f Nothing = Nothing
+mapMaybe f (Just a) = Just (f a)
 
 justMap :: (a -> Maybe b) -> [a] -> [b]
 justMap = undefined
