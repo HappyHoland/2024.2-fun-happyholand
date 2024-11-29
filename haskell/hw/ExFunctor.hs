@@ -46,7 +46,13 @@ instance Funktor ((->) a) where
 
 -- what about Trees?
 
+data Tree a where
+    Nil :: Tree a
+    Node :: a -> Tree a -> Tree a -> Tree a
 
+instance Funktor Tree where
+    fmap f Nil = Nil
+    fmap f (Node x l r) = Node (f x) (fmap f l) (fmap f r) 
 
 -- ...define Functor instances of as many * -> * things as you can think of!
 
