@@ -1,4 +1,5 @@
 module ExArithV where
+import Distribution.Simple.Utils (xargs)
 
 -- modify ExArith to allow for variables
 
@@ -21,5 +22,10 @@ pretty (Plus e e') = pretty e ++ " + " ++ pretty e'
 
 -- eval evaluates an expression and returns its value
 -- eval :: ?
-eval = undefined
+eval :: ArExV -> (String -> Int) -> Int
+eval (Atom x) _ = x
+eval (Var s) f = f s
+eval (Plus e e') f = eval e f + eval e' f
+eval (Times e e') f = eval e f * eval e' f
+eval (Neg e) f = - (eval e f) 
 
