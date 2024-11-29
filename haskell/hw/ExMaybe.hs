@@ -3,6 +3,7 @@ module ExMaybe where
 -- Do not alter this import!
 import Prelude hiding ( maybe, Maybe(..) )
 import qualified Data.Maybe as M
+import Distribution.Simple.Utils (safeHead)
 
 data Maybe a = Nothing | Just a
     deriving (Show, Eq, Ord)
@@ -31,17 +32,20 @@ mapMaybe f Nothing = Nothing
 mapMaybe f (Just a) = Just (f a)
 
 justMap :: (a -> Maybe b) -> [a] -> [b]
-justMap = undefined
+justMap f = catMaybes . map f
 
 maybe :: b -> (a -> b) -> Maybe a -> b
-maybe = undefined
+maybe b f = fromMaybe b . mapMaybe f
 
 maybeToList :: Maybe a -> [a]
-maybeToList = undefined
+maybeToList x = catMaybes [x]
 
 listToMaybe :: [a] -> Maybe a
-listToMaybe = undefined
+listToMaybe [] = Nothing
+listToMaybe (x:xs) = Just x
 
 tryToModifyWith :: [Maybe (a -> a)] -> [a] -> [a]
-tryToModifyWith = undefined
+tryToModifyWith [] xs = xs
+tryToModifyWith _ [] = []
+tryToModifyWith (f:fs) (x:xs) = fromMaybe id f x : tryToModifyWith fs xs 
 
