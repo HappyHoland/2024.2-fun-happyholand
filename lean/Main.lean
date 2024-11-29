@@ -149,70 +149,80 @@ theorem mul_ass (n m k: nat): mul n (mul m k) = mul (mul n m) k := by
         rw [hd]
 
 theorem concat_nil (l: list a): concat l .nil = l := by
-  induction l
+    induction l
 
-  case nil =>
-    rw [concat] -- concat.1 l := nil
+    case nil =>
+        rw [concat] -- concat.1 l := nil
 
-  case cons x xs hd =>
-    rw [concat] -- concat.2 l: cons x xs, l' := nil
-    rw [hd]
+    case cons x xs hd =>
+        rw [concat] -- concat.2 l: cons x xs, l' := nil
+        rw [hd]
 
 theorem concat_ass (xs ys zs: list a): concat xs (concat ys zs) = concat (concat xs ys) zs := by
-  induction xs
+    induction xs
 
-  case nil =>
-    rw [concat] -- concat.1 l := concat ys zs
-    rw [concat] -- concat.1 l := ys
+    case nil =>
+        rw [concat] -- concat.1 l := concat ys zs
+        rw [concat] -- concat.1 l := ys
 
-  case cons x xs hd =>
-    rw [concat] -- concat.2 l := x::xs, l' := concat ys zs
-    rw [concat] -- concat.2 l := x::xs, l' := ys
-    rw [concat] -- concat.2 l := x :: (concat xs ys), l' := zs
-    rw [hd]
+    case cons x xs hd =>
+        rw [concat] -- concat.2 l := x::xs, l' := concat ys zs
+        rw [concat] -- concat.2 l := x::xs, l' := ys
+        rw [concat] -- concat.2 l := x :: (concat xs ys), l' := zs
+        rw [hd]
 
 theorem rev_concat (xs ys: list a): reverse (concat xs ys) = concat (reverse ys) (reverse xs) := by
-  induction xs
+    induction xs
 
-  case nil =>
-    rw [concat] -- concat.1 l := ys
-    rw [reverse] -- reverse.1
-    rw [concat_nil (reverse ys)]
+    case nil =>
+        rw [concat] -- concat.1 l := ys
+        rw [reverse] -- reverse.1
+        rw [concat_nil (reverse ys)]
 
-  case cons x xs hd =>
-    rw [concat] -- concat.2 l := x::xs, l' := ys
-    rw [reverse] -- reverse.2 l := x :: (xs ++ ys)
-    rw [reverse] -- reverse.2 l := x::xs
-    rw [hd]
-    rw [concat_ass (reverse ys) (reverse xs) (.cons x .nil)]
+    case cons x xs hd =>
+        rw [concat] -- concat.2 l := x::xs, l' := ys
+        rw [reverse] -- reverse.2 l := x :: (xs ++ ys)
+        rw [reverse] -- reverse.2 l := x::xs
+        rw [hd]
+        rw [concat_ass (reverse ys) (reverse xs) (.cons x .nil)]
 
 theorem rev_rev (l: list a): reverse (reverse l) = l := by
+    induction l
+
+    case nil =>
+        rw [reverse]
+        rw [reverse]
+
+    case cons x xs hd =>
+        rw [reverse] -- reverse.2 l := cons x xs
+        rw [rev_concat (reverse xs) (.cons x .nil)]
+        rw [hd]
+        rw [reverse] -- reverse.2 l := cons x nil
+        rw [reverse] -- reverse.1
+        rw [concat] -- concat.1 l := cons x nil
+        rw [concat] -- concat.2 l := cons x nil, l' := xs
+        rw [concat] -- concat.1 l := xs
+
+theorem concat_take_drop: ∀ l : list a, ∀ n : nat, concat (take n l) (drop n l) = l := by
+  intro l
   induction l
 
   case nil =>
-    rw [reverse]
-    rw [reverse]
-
-  case cons x xs hd =>
-    rw [reverse] -- reverse.2 l := cons x xs
-    rw [rev_concat (reverse xs) (.cons x .nil)]
-    rw [hd]
-    rw [reverse] -- reverse.2 l := cons x nil
-    rw [reverse] -- reverse.1
-    rw [concat] -- concat.1 l := cons x nil
-    rw [concat] -- concat.2 l := cons x nil, l' := xs
-    rw [concat] -- concat.1 l := xs
-
-theorem eq_list_imp_eq_cons (x: a) (l l': list a): l = l' → list.cons x l = list.cons x l' := by
-  intro h
-  rw [h]
-
-theorem concat_take_drop_n (n: nat) (l: list a): concat (take n l) (drop n l) = l := by
-  induction l
-
-  case nil =>
+    intro n
     rw [take]
     rw [drop]
     rw [concat]
 
   case cons x xs hd =>
+    intro n
+    match n with
+    | .O =>
+        rw [take]
+        rw [drop]
+        rw [concat]
+
+    | .S m =>
+        rw [take]
+        rw [drop]
+        rw [concat]
+        rw [hd m]

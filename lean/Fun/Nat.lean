@@ -2,6 +2,9 @@ inductive nat
   | O: nat
   | S: nat -> nat
 
+axiom well_defined_nats: ∀ n: nat, n.S = .O → False
+axiom unique_succ: ∀ n m: nat, n.S = m.S → n = m
+
 def add (n m : nat): nat :=
   match m with
   | .O => n
